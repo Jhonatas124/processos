@@ -1,5 +1,5 @@
 {
-  "version": "1.0",
+  "version": "1.1",
   "date": "2026-09-28",
-  "notes": "Primeira versão: processos, resumo e decisão, movimentações, autos, perguntas ao GPT, adicionar por número, notificações."
+  "notes": "Quadrados redesenhados: ícones novos, título logo abaixo do ícone, fase no rodapé com a cor da situação e data da última movimentação."
 }
