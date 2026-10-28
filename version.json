@@ -1,5 +1,5 @@
 {
-  "version": "1.1",
-  "date": "2026-09-28",
-  "notes": "Quadrados redesenhados: ícones novos, título logo abaixo do ícone, fase no rodapé com a cor da situação e data da última movimentação."
+  "version": "1.2",
+  "date": "2026-10-28",
+  "notes": "O app pede pro celular não apagar os dados dele; e, se abrir vazio sem o cofre ligado, mostra o botão “Trazer meus processos do cofre”."
 }

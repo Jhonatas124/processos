@@ -211,7 +211,7 @@ details summary{cursor:pointer}
 <script>
 'use strict';
 const APP_ID = 'processos-de-bolso';
-const APP_VERSION = '1.1';
+const APP_VERSION = '1.2';
 const PREVIEW = !!window.PREVIEW_MODE;
 
 /* ---------- utilidades ---------- */
@@ -593,7 +593,11 @@ function viewHome() {
       <b class="t-tit">${esc(p.titulo)}</b>
       <span class="t-fase"><i></i>${Upd.ia.has(p.id) ? 'Resumindo a novidade…' : esc(p.fase || '')}</span></button>`; }).join('');
   const add = `<button class="tile t-add" data-act="add"><span class="t-ico">${ico('plus', 24)}</span><span>Adicionar<br>processo</span></button>`;
-  const vazio = !ps.length ? `<section class="card stack"><b>Nenhum processo ainda</b><p class="muted small" style="margin:0">Toque em <b>Adicionar processo</b> e digite o número — ou ligue o cofre em Ajustes pra receber os seus.</p></section>` : '';
+  /* tela vazia: se este aparelho não está ligado ao cofre, os processos dele estão lá — botão grande pra trazer de volta */
+  const semCofre = !(typeof Vault !== 'undefined' && Vault.cfg);
+  const vazio = !ps.length ? (semCofre
+    ? `<section class="card stack"><b>Seus processos estão guardados no cofre</b><p class="muted small" style="margin:0">Este aparelho ainda não está ligado a ele. Ligue o cofre (repositório, chave do GitHub e senha do cofre) e eles voltam com os autos.</p><button class="btn primary big" data-act="vault-setup">Trazer meus processos do cofre</button></section>`
+    : `<section class="card stack"><b>Nenhum processo ainda</b><p class="muted small" style="margin:0">Toque em <b>Adicionar processo</b> e digite o número.</p></section>`) : '';
   return `${updBanner()}<header class="head"><div class="brand"><h1>Processos</h1><span class="muted">${ps.length ? plural(ps.length, 'acompanhado', 'acompanhados') : ''}</span></div>
       <button class="icon-btn" data-act="settings" aria-label="Ajustes">${ico('gear', 22)}</button></header>
     ${vazio}<div class="tiles">${tiles}${add}</div>
@@ -1426,6 +1430,7 @@ window.addEventListener('online', () => { Vault.schedule(500); });
 async function boot() {
   const vv = window.visualViewport; /* teclado do iPhone não cobre a caixa de pergunta */
   if (vv) { const kb = () => document.documentElement.style.setProperty('--kb', Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop)) + 'px'); vv.addEventListener('resize', kb); vv.addEventListener('scroll', kb); }
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (_) {} /* pede pro navegador não apagar os dados do aparelho */
   try { S = await kvGet('state'); } catch (_) { S = null; }
   migrate();
   Upd.lastAll = (await kvGet('ultimaConsulta')) || null;
